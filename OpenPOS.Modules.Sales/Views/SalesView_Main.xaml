@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="OpenPOS.Modules.Sales.Views.SalesView_Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:infrastructure="clr-namespace:OpenPOS.Infrastructure.MVVM;assembly=OpenPOS.Infrastructure"
+    xmlns:prism="clr-namespace:Microsoft.Practices.Composite.Presentation.Commands;assembly=Microsoft.Practices.Composite.Presentation"
+             xmlns:swc="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+             xmlns:controls="clr-namespace:OpenPOS.Controls;assembly=OpenPOS.Controls"
+             Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <infrastructure:CommandReference Command="{Binding AddTransactionCommand}" x:Key="addTransactionCommandRefrence" />
+        <swc:BooleanToVisibilityConverter x:Key="isLoadingConverter" />
+    </UserControl.Resources>
+
+    <controls:BusyIndicator IsBusy="{Binding IsBusy}">
+        <Grid x:Name="LayoutRoot" Background="{DynamicResource ShadeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="300"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Margin="5,2.5,2.5,5" Grid.Column="0" ItemsSource="{Binding Categories}" SelectedValue="{Binding SelectedCategory, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+
+                <ListBox Margin="2.5,2.5,5,5" Grid.Column="1" ItemsSource="{Binding Products}" SelectedValue="{Binding SelectedProduct, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="+" Command="{StaticResource addTransactionCommandRefrence}" CommandParameter="{Binding}" Width="30" Height="25" />
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="5,5,5,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                    <ComboBox Width="275" ItemsSource="{Binding Tickets}" SelectedItem="{Binding SelectedTicket, Mode=TwoWay}" Margin="0,0,5,0" VerticalAlignment="Center">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Id}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Content="Delete" Command="{Binding RemoveTicketCommand}" Width="80" Height="35" Margin="1.5,0,1.5,0">
+                    </Button>
+                    <Button Content="New" Command="{Binding AddTicketCommand}" Width="80" Height="35" Margin="1.5,0,1.5,0">
+                    </Button>
+                </StackPanel>
+
+                <Grid Margin="5,5,5,2.5" Grid.Column="0" Grid.Row="1" DataContext="{Binding SelectedTicket}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <ListView Grid.Row="1" ItemsSource="{Binding Lines}" SelectedValue="{Binding SelectedTicketLine, Mode=TwoWay}" Margin="0,0,0,2.5">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Item" Width="200" DisplayMemberBinding="{Binding Product.Name}" />
+                                <GridViewColumn Header="Price" Width="75" DisplayMemberBinding="{Binding Price, StringFormat='R0.00'}" />
+                                <GridViewColumn Header="Units" Width="50" DisplayMemberBinding="{Binding Units}"/>
+                                <GridViewColumn Header="Tax" Width="60" DisplayMemberBinding="{Binding Tax, StringFormat='0.00%'}" />
+                                <GridViewColumn Header="Value" Width="75" DisplayMemberBinding="{Binding Value, StringFormat='R0.00'}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,2.5,0,0">
+                        <TextBlock Text="Subtotal: " Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Width="125" IsReadOnly="True" Text="{Binding Subtotal, Mode=OneWay, StringFormat='R0.00'}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="0,2.5,0,0">
+                        <TextBlock Text="Taxes: " Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Margin="0,0,5,0" />
+                        <TextBox Width="125" IsReadOnly="True" Text="{Binding Taxes, Mode=OneWay, StringFormat='R0.00'}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="4" Margin="0,2.5,0,0">
+                        <TextBlock Text="Total: " Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Width="125" IsReadOnly="True" Text="{Binding Total, Mode=OneWay, StringFormat='R0.00'}" />
+                    </StackPanel>
+                </Grid>
+
+                <controls:Keypad Grid.Row="1" Grid.Column="2" Margin="5,5,0,0"
+                            IncrementCommand="{Binding IncreaseUnitsCommand}"
+                            IncrementCommandParameter="{Binding}"
+                            DecrementCommand="{Binding DecreaseUnitsCommand}"
+                            DecrementCommandParameter="{Binding}"
+                                 ProcessCommand="{Binding ProcessTicketCommand}"
+                            BarcodeCommand="{Binding BarcodeCommand}"
+                                 
+                                 />
+            </Grid>
+        </Grid>
+    </controls:BusyIndicator>
+</UserControl>

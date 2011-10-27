@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="OpenPOS.Modules.Sales.Views.EditSalesView_Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="clr-namespace:Microsoft.Practices.Composite.Presentation.Commands;assembly=Microsoft.Practices.Composite.Presentation">
+
+    <Grid x:Name="LayoutRoot" Background="{DynamicResource ShadeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Margin="0,5,5,0">
+            <Button Content="Edit" Command="{Binding DeleteCommand}" Width="80" Height="35" Margin="1.5,0,1.5,0" IsEnabled="False">
+            </Button>
+            <Button Content="Delete" Command="{Binding AddCommand}" Width="80" Height="35" Margin="1.5,0,1.5,0" IsEnabled="False">
+            </Button>
+            <Button Content="Refund" Command="{Binding SaveCommand}" Width="80" Height="35" Margin="1.5,0,1.5,0" IsEnabled="False">
+            </Button>
+        </StackPanel>
+
+        <ListBox ItemsSource="{Binding Tickets}" Grid.Row="1" Margin="5,5,5,5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="2.5,2.5,2.5,2.5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Ticket:" Grid.Row="0" Grid.Column="0" />
+                        <TextBlock Text="Date:" Grid.Row="1" Grid.Column="0" Margin="0,3.5,0,0" />
+                        <TextBlock Text="Value:" Grid.Row="2" Grid.Column="0" />
+
+                        <TextBlock Text="{Binding Id}" Grid.Row="0" Grid.Column="1" FontWeight="Bold" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+
+</UserControl>

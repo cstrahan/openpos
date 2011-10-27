@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="OpenPOS.Modules.Sales.Views.CloseCashView_Main"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Details" Grid.Row="0" Margin="10,10,10,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Date: " />
+                <TextBlock Grid.Column="1" Text="{Binding Today}" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Payments" Grid.Row="1" Margin="10,5,10,5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="{Binding Payments.Count, StringFormat='Payments: 0'}" Grid.Row="0" Grid.Column="1" />
+                <TextBlock Text="{Binding Cash, StringFormat='Cash: R0.00'}" Grid.Row="1" Grid.Column="1" />
+
+                <ListView ItemsSource="{Binding PaymentSummary}" DisplayMemberPath="Method" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Height="125" Margin="5,5,5,5">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Method" DisplayMemberBinding="{Binding Method}" Width="200" />
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Total, StringFormat='R0.00'}" Width="100" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,5,10,0">
+            <Button Content="Close Cash" Command="{Binding CloseCashCommand}" />    
+        </StackPanel>
+    </Grid>
+</UserControl>
